@@ -24,6 +24,15 @@ def test_daily_manifest_writes_a_matching_fullpack_installation_plan(
     assert release is not None
     assembler = ZipAssembler(context, release)
 
+    resolved_mods = assembler.get_mods(Side.CLIENT_JAVA9)
+    for mod, version in resolved_mods:
+        if mod.private:
+            group = "tuhljin.automagy" if mod.name == "Automagy-GTNH" else "com.github.GTNewHorizons"
+            version.maven_url = (
+                "https://nexus.gtnewhorizons.com/repository/releases/"
+                f"{group.replace('.', '/')}/{mod.name}/{version.version_tag}/{mod.name}-{version.version_tag}.jar"
+            )
+
     originals = {
         "config/txloader/load/mainmenu/version.txt": b"stale",
         "config/GTNewHorizons/dreamcraft.cfg": b"S:ModPackVersion=stale\n",
@@ -45,13 +54,12 @@ def test_daily_manifest_writes_a_matching_fullpack_installation_plan(
     files = plan["files"]
     assert isinstance(files, list)
     files_by_path = {entry["path"]: entry for entry in files}
-    resolved_mods = assembler.get_mods(Side.CLIENT_JAVA9)
     assert len(files) == len(resolved_mods) + 1
 
     for mod, version in resolved_mods:
         assert version.filename is not None
         entry = files_by_path[f"mods/{version.filename}"]
-        expected_url = version.browser_download_url if mod.is_github() and not mod.private else version.download_url
+        expected_url = version.maven_url if mod.private else version.browser_download_url if mod.is_github() else version.download_url
         assert entry["url"] == expected_url
 
         if mod.is_github():
@@ -59,15 +67,13 @@ def test_daily_manifest_writes_a_matching_fullpack_installation_plan(
             repo = PurePosixPath(urlparse(mod.repo_url).path).name
             assert entry["owner"] == repo
             if mod.repo_url.startswith("https://github.com/GTNewHorizons/"):
-                assert entry["maven"] == f"com.github.GTNewHorizons:{mod.name}:{version.version_tag}"
+                group = "tuhljin.automagy" if mod.name == "Automagy-GTNH" else "com.github.GTNewHorizons"
+                assert entry["maven"] == f"{group}:{mod.name}:{version.version_tag}"
         else:
             assert "owner" not in entry
             assert "maven" not in entry
 
-        if mod.is_github() and mod.private:
-            assert entry["authentication"] == "github"
-        else:
-            assert "authentication" not in entry
+        assert "authentication" not in entry
 
     lwjgl = next(version for mod, version in resolved_mods if mod.name == "lwjgl3ify")
     launcher_asset = next(asset for asset in lwjgl.extra_assets if (asset.filename or "").endswith("forgePatches.jar"))
