@@ -1,0 +1,69 @@
+name: Full-pack manifest
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 5 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: 3.11
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Get cache date
+        id: date
+        run: echo "cachedate=$(date '+%G-w%V')" >> "$GITHUB_OUTPUT"
+
+      - name: Load cached mod zips
+        id: load-mod-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: cache
+          key: fullpack-daily-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
+          restore-keys: |
+            fullpack-daily-${{ runner.os }}-
+
+      - name: Generate manifest
+        env:
+          GITHUB_TOKEN: ${{ secrets.NIGHTLY_GITHUB_TOKEN }}
+        run: |
+          uv run python -m daxxl.cli.generate_daily --id "${{ github.run_number }}" --update-available
+          uv run python -m daxxl.cli.generate_fullpack_manifest
+
+      - name: Save cached mod zips
+        if: steps.load-mod-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: cache
+          key: fullpack-daily-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
+
+      - name: Publish manifest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          manifest=releases/manifests/fullpack/daily.json
+          if gh release view fullpack-daily > /dev/null 2>&1; then
+            gh release upload fullpack-daily "$manifest" --clobber
+          else
+            gh release create fullpack-daily "$manifest" --prerelease \
+              --title "Full-pack daily manifest" \
+              --notes "Generated from the current GTNH daily mod list."
+          fi

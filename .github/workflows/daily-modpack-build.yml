@@ -2,8 +2,6 @@ name: Daily modpack build
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '20 3 * * *' # 3:20am UTC every day
 
 concurrency:
   group: ${{ github.workflow }}

@@ -10,18 +10,34 @@ from daxxl.gtnh_logger import get_logger
 log = get_logger(__name__)
 
 
-async def assemble_dev_release(dev_release: DevRelease, verbose: bool) -> None:
+async def prepare_dev_release(dev_release: DevRelease) -> tuple[AppContext, ReleaseAssemblerController] | None:
     release_name = dev_release.value
     context = AppContext(AsyncClient(http2=True))
     release = context.release_service.get_release(release_name)
     if not release:
-        log.error(f"Release `{Fore.LIGHTRED_EX}{release_name}{Fore.RESET}` not found! Error building the {release_name} archive.")
-        return
+        log.error(f"Release `{Fore.LIGHTRED_EX}{release_name}{Fore.RESET}` not found!")
+        return None
 
     await context.downloader.download_release(release)
+    return context, ReleaseAssemblerController(context, release)
 
-    assembler = ReleaseAssemblerController(context, release)
-    write_fullpack_manifest(RELEASE_MANIFEST_DIR / f"{release_name}.json", assembler.zip_assembler)
+
+async def generate_dev_release_manifest(dev_release: DevRelease) -> None:
+    prepared = await prepare_dev_release(dev_release)
+    if prepared is None:
+        return
+
+    _, assembler = prepared
+    write_fullpack_manifest(RELEASE_MANIFEST_DIR / f"{dev_release.value}.json", assembler.zip_assembler)
+
+
+async def assemble_dev_release(dev_release: DevRelease, verbose: bool) -> None:
+    prepared = await prepare_dev_release(dev_release)
+    if prepared is None:
+        return
+
+    context, assembler = prepared
+    write_fullpack_manifest(RELEASE_MANIFEST_DIR / f"{dev_release.value}.json", assembler.zip_assembler)
     await assembler.assemble_zip(Side.SERVER_JAVA9, verbose=verbose)
     await assembler.assemble_zip(Side.SERVER, verbose=verbose)
     await assembler.assemble_prism(Side.CLIENT, verbose=verbose)
