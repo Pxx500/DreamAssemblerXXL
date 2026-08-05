@@ -45,7 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.NIGHTLY_GITHUB_TOKEN }}
         run: |
-          uv run python -m daxxl.cli.generate_daily --id "${{ github.run_number }}" --update-available
+          uv run python -m daxxl.cli.generate_daily --update-available
           uv run python -m daxxl.cli.generate_fullpack_manifest
 
       - name: Save cached mod zips
