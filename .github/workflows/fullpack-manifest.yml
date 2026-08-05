@@ -32,28 +32,26 @@ jobs:
         id: date
         run: echo "cachedate=$(date '+%G-w%V')" >> "$GITHUB_OUTPUT"
 
-      - name: Load cached mod zips
-        id: load-mod-cache
+      - name: Load cached config
+        id: load-config-cache
         uses: actions/cache/restore@v5
         with:
           path: cache
-          key: fullpack-daily-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
+          key: fullpack-config-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
           restore-keys: |
-            fullpack-daily-${{ runner.os }}-
+            fullpack-config-${{ runner.os }}-
 
       - name: Generate manifest
         env:
-          GITHUB_TOKEN: ${{ secrets.NIGHTLY_GITHUB_TOKEN }}
-        run: |
-          uv run python -m daxxl.cli.generate_daily --update-available
-          uv run python -m daxxl.cli.generate_fullpack_manifest
+          GITHUB_TOKEN: ${{ github.token }}
+        run: uv run python -m daxxl.cli.generate_fullpack_manifest
 
-      - name: Save cached mod zips
-        if: steps.load-mod-cache.outputs.cache-hit != 'true'
+      - name: Save cached config
+        if: steps.load-config-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v5
         with:
           path: cache
-          key: fullpack-daily-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
+          key: fullpack-config-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
 
       - name: Publish manifest
         env:

@@ -97,14 +97,21 @@ def _mod_file(mod: GTNHModInfo, version: GTNHVersion) -> dict[str, Any]:
     if mod.is_github():
         entry["owner"] = _repository_name(mod)
         if _is_gtnh_repository(mod):
-            entry["maven"] = f"com.github.GTNewHorizons:{mod.name}:{version.version_tag}"
+            if mod.private:
+                assert version.maven_url is not None
+                entry["maven"] = _maven_coordinates(version.maven_url)
+            else:
+                entry["maven"] = f"com.github.GTNewHorizons:{mod.name}:{version.version_tag}"
     _add_authentication(entry, mod)
     return entry
 
 
 def _download_url(asset: Versionable, version: GTNHVersion) -> str:
-    if isinstance(asset, GTNHModInfo) and not asset.is_github():
-        url = version.download_url
+    if isinstance(asset, GTNHModInfo):
+        if asset.private:
+            url = version.maven_url
+        else:
+            url = version.browser_download_url if asset.is_github() else version.download_url
     else:
         url = version.download_url if asset.private else version.browser_download_url
     if url is None:
@@ -120,8 +127,23 @@ def _extra_asset_url(mod: GTNHModInfo, asset: ExtraAsset) -> str:
 
 
 def _add_authentication(entry: dict[str, Any], asset: Versionable) -> None:
-    if asset.private and (not isinstance(asset, GTNHModInfo) or asset.is_github()):
+    if asset.private and urlparse(entry["url"]).hostname == "api.github.com":
         entry["authentication"] = "github"
+
+
+def _maven_coordinates(url: str) -> str:
+    path = urlparse(url).path
+    prefix = "/repository/releases/"
+    if not path.startswith(prefix):
+        raise ValueError(f"Unsupported Maven URL: {url}")
+
+    parts = path.removeprefix(prefix).split("/")
+    if len(parts) < 4:
+        raise ValueError(f"Unsupported Maven URL: {url}")
+
+    group = ".".join(parts[:-3])
+    artifact, version = parts[-3:-1]
+    return f"{group}:{artifact}:{version}"
 
 
 def _repository_name(mod: GTNHModInfo) -> str:
