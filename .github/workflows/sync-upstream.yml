@@ -50,9 +50,6 @@ jobs:
               --jq .number)
           fi
 
-          if ! gh pr merge "$pr_number" --auto --merge; then
-            mergeable=$(gh pr view "$pr_number" --json mergeable --jq '.mergeable')
-            if [ "$mergeable" != "CONFLICTING" ]; then
-              exit 1
-            fi
-          fi
+          gh api --method PUT "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}/merge" \
+            -f merge_method=merge \
+            --silent
