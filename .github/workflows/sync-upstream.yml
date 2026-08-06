@@ -34,14 +34,20 @@ jobs:
             exit 0
           fi
 
-          pr_number=$(gh api "repos/${GITHUB_REPOSITORY}/pulls?base=master&head=GTNewHorizons:master&state=open" --jq '.[0].number')
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --force-create sync/upstream-master master
+          git merge --no-edit upstream/master
+          git push --force-with-lease origin sync/upstream-master
+
+          pr_number=$(gh pr list --base master --head sync/upstream-master --state open --json number --jq '.[0].number')
           if [ -z "$pr_number" ]; then
-            pr_number=$(gh api --method POST "repos/${GITHUB_REPOSITORY}/pulls" \
-              -f base=master \
-              -f head=GTNewHorizons:master \
-              -f title="Sync upstream master" \
-              -f body="Syncs this fork with the latest GTNewHorizons/DreamAssemblerXXL master." \
-              --jq .number)
+            gh pr create \
+              --base master \
+              --head sync/upstream-master \
+              --title "Sync upstream master" \
+              --body "Syncs this fork with the latest GTNewHorizons/DreamAssemblerXXL master."
+            pr_number=$(gh pr list --base master --head sync/upstream-master --state open --json number --jq '.[0].number')
           fi
 
           if ! gh pr merge "$pr_number" --auto --merge; then
