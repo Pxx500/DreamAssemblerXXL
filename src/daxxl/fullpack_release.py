@@ -1,6 +1,7 @@
 import json
 import re
 import subprocess
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -13,9 +14,7 @@ from daxxl.utils import atomic_write_text
 
 TRANSLATIONS_REPOSITORY = ("GTNewHorizons", "GTNH-Translations")
 RELEASE_TAG = "fullpack-daily"
-TRANSLATION_FILENAME = re.compile(
-    r"^GTNH-[^-]+-Translation-Daily-(?P<date>\d{4}-\d{2}-\d{2})\+(?P<build>\d+)\.zip$"
-)
+TRANSLATION_FILENAME = re.compile(r"^GTNH-[^-]+-Translation-Daily-(?P<date>\d{4}-\d{2}-\d{2})\+(?P<build>\d+)\.zip$")
 
 
 @dataclass(frozen=True)
@@ -117,6 +116,7 @@ async def publish_fullpack_manifest(
     repository: str,
     release: FullpackRelease,
     client: httpx.AsyncClient,
+    companion_assets: Sequence[Path] = (),
 ) -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     release.ensure_exists()
@@ -138,6 +138,8 @@ async def publish_fullpack_manifest(
 
             archive["url"] = _mirrored_url(repository, filename)
 
+    for asset in companion_assets:
+        release.upload(asset, clobber=True)
     atomic_write_text(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
     release.upload(manifest_path, clobber=True)
     for asset_id in expired_translation_asset_ids(release.assets()):

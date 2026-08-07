@@ -42,23 +42,18 @@ def write_manifest(path: Path) -> None:
                 "archives": [
                     {"url": "https://example.com/config.zip", "exclude": ["server-only.txt"]},
                     {
+                        "url": ("https://github.com/Pxx500/GTNH-Translations/releases/download/pl_PL-latest/not-the-upstream-translation.zip"),
+                        "keepExisting": True,
+                    },
+                    {
                         "url": (
-                            "https://github.com/Pxx500/GTNH-Translations/releases/download/"
-                            "pl_PL-latest/not-the-upstream-translation.zip"
+                            "https://github.com/GTNewHorizons/GTNH-Translations/releases/download/pl_PL-latest/GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip"
                         ),
                         "keepExisting": True,
                     },
                     {
                         "url": (
-                            "https://github.com/GTNewHorizons/GTNH-Translations/releases/download/"
-                            "pl_PL-latest/GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip"
-                        ),
-                        "keepExisting": True,
-                    },
-                    {
-                        "url": (
-                            "https://github.com/GTNewHorizons/GTNH-Translations/releases/download/"
-                            "de_DE-latest/GTNH-de_DE-Translation-Daily-2026-08-06+413.zip"
+                            "https://github.com/GTNewHorizons/GTNH-Translations/releases/download/de_DE-latest/GTNH-de_DE-Translation-Daily-2026-08-06+413.zip"
                         ),
                         "keepExisting": True,
                     },
@@ -80,7 +75,7 @@ def test_publish_mirrors_translations_before_replacing_manifest(tmp_path: Path) 
         ]
     )
 
-    async def respond(request: httpx.Request) -> httpx.Response:
+    def respond(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, content=request.url.path.encode())
 
     async def run() -> None:
@@ -101,21 +96,12 @@ def test_publish_mirrors_translations_before_replacing_manifest(tmp_path: Path) 
     assert isinstance(archives, list)
     assert archives[0] == {"url": "https://example.com/config.zip", "exclude": ["server-only.txt"]}
     assert archives[1] == {
-        "url": (
-            "https://github.com/Pxx500/GTNH-Translations/releases/download/"
-            "pl_PL-latest/not-the-upstream-translation.zip"
-        ),
+        "url": ("https://github.com/Pxx500/GTNH-Translations/releases/download/pl_PL-latest/not-the-upstream-translation.zip"),
         "keepExisting": True,
     }
     assert [archive["url"] for archive in archives[2:]] == [
-        (
-            "https://github.com/Pxx500/DreamAssemblerXXL/releases/download/fullpack-daily/"
-            "GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip"
-        ),
-        (
-            "https://github.com/Pxx500/DreamAssemblerXXL/releases/download/fullpack-daily/"
-            "GTNH-de_DE-Translation-Daily-2026-08-06+413.zip"
-        ),
+        ("https://github.com/Pxx500/DreamAssemblerXXL/releases/download/fullpack-daily/GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip"),
+        ("https://github.com/Pxx500/DreamAssemblerXXL/releases/download/fullpack-daily/GTNH-de_DE-Translation-Daily-2026-08-06+413.zip"),
     ]
 
 
@@ -125,7 +111,7 @@ def test_publish_reuses_an_existing_translation_asset(tmp_path: Path) -> None:
     existing = ReleaseAsset(7, "GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip")
     release = FakeRelease([existing])
 
-    async def respond(request: httpx.Request) -> httpx.Response:
+    def respond(request: httpx.Request) -> httpx.Response:
         assert "de_DE" in request.url.path
         return httpx.Response(200, content=b"translation")
 
@@ -139,12 +125,41 @@ def test_publish_reuses_an_existing_translation_asset(tmp_path: Path) -> None:
     assert ("upload", "GTNH-de_DE-Translation-Daily-2026-08-06+413.zip") in release.events
 
 
+def test_publish_uploads_companion_assets_before_the_manifest(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "daily-server.json"
+    manifest_path.write_text(
+        json.dumps({"version": 1, "files": [], "archives": [], "textFiles": {}}),
+        encoding="utf-8",
+    )
+    server_assets = tmp_path / "server-assets.zip"
+    server_assets.write_bytes(b"server")
+    release = FakeRelease()
+
+    async def run() -> None:
+        async with httpx.AsyncClient() as client:
+            await publish_fullpack_manifest(
+                manifest_path,
+                "Pxx500/DreamAssemblerXXL",
+                release,
+                client,
+                companion_assets=[server_assets],
+            )
+
+    asyncio.run(run())
+
+    assert release.events == [
+        ("ensure", ""),
+        ("upload", "server-assets.zip"),
+        ("upload", "daily-server.json"),
+    ]
+
+
 def test_failed_translation_download_does_not_replace_manifest(tmp_path: Path) -> None:
     manifest_path = tmp_path / "daily.json"
     write_manifest(manifest_path)
     release = FakeRelease()
 
-    async def respond(_request: httpx.Request) -> httpx.Response:
+    def respond(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(404)
 
     async def run() -> None:
@@ -167,7 +182,7 @@ def test_failed_translation_upload_does_not_replace_manifest(tmp_path: Path) -> 
     failing_name = "GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip"
     release = FakeRelease(failing_upload=failing_name)
 
-    async def respond(_request: httpx.Request) -> httpx.Response:
+    def respond(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, content=b"translation")
 
     async def run() -> None:
