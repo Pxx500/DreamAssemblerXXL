@@ -51,7 +51,11 @@ jobs:
           path: cache
           key: fullpack-config-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
 
-      - name: Mirror translations and publish manifest
+      - name: Publish manifests
         env:
           GH_TOKEN: ${{ github.token }}
-        run: uv run python -m daxxl.cli.publish_fullpack_manifest releases/manifests/fullpack/daily.json
+        run: |
+          uv run python -m daxxl.cli.publish_fullpack_manifest releases/manifests/fullpack/daily.json
+          uv run python -m daxxl.cli.publish_fullpack_manifest \
+            releases/manifests/fullpack/daily-server.json \
+            releases/manifests/fullpack/server-assets.zip

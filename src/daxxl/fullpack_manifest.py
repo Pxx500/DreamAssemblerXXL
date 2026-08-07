@@ -19,30 +19,34 @@ AssetPathResolver = Callable[[Versionable, GTNHVersion], Path]
 InstallationPlan = dict[str, Any]
 
 
-def fullpack_manifest_path(manifest_path: Path) -> Path:
-    return manifest_path.parent / "fullpack" / manifest_path.name
+def fullpack_manifest_path(manifest_path: Path, side: Side = Side.CLIENT_JAVA9) -> Path:
+    name = manifest_path.name if side.is_client() else f"{manifest_path.stem}-server{manifest_path.suffix}"
+    return manifest_path.parent / "fullpack" / name
 
 
 def build_fullpack_manifest(
     assembler: ZipAssembler,
     asset_path: AssetPathResolver = get_asset_version_cache_location,
+    *,
+    side: Side = Side.CLIENT_JAVA9,
+    server_assets_url: str | None = None,
 ) -> InstallationPlan:
-    """Describe how to install the Java 17+ client from the resolved release."""
+    """Describe how to install a Java 17+ runtime from the resolved release."""
     files: list[dict[str, Any]] = []
-    for mod, version in assembler.get_mods(Side.CLIENT_JAVA9):
+    for mod, version in assembler.get_mods(side):
         files.append(_mod_file(mod, version))
 
         if mod.name == "lwjgl3ify":
             patch = next(asset for asset in version.extra_assets if asset.filename is not None and asset.filename.endswith("forgePatches.jar"))
             launcher = {
-                "path": ".gtnh/launcher/lwjgl3ify-forgePatches.jar",
+                "path": ".gtnh/launcher/lwjgl3ify-forgePatches.jar" if side.is_client() else "lwjgl3ify-forgePatches.jar",
                 "url": _extra_asset_url(mod, patch),
             }
             _add_authentication(launcher, mod)
             files.append(launcher)
 
     config, config_version = assembler.get_config()
-    exclusions = list(assembler.exclusions[Side.CLIENT_JAVA9].exclusions)
+    exclusions = [path.rstrip("/") for path in assembler.exclusions[side].exclusions]
     exclusions.extend(sorted(assembler.excluded_config_files - set(exclusions)))
 
     config_archive: dict[str, Any] = {"url": _download_url(config, config_version)}
@@ -51,20 +55,31 @@ def build_fullpack_manifest(
     _add_authentication(config_archive, config)
 
     archives = [config_archive]
-    translations = assembler.context.assets.translations
-    for version in translations.versions:
-        translation_archive: dict[str, Any] = {
-            "url": _download_url(translations, version),
-            "keepExisting": True,
-        }
-        _add_authentication(translation_archive, translations)
-        archives.append(translation_archive)
+    if side.is_client():
+        translations = assembler.context.assets.translations
+        for version in translations.versions:
+            translation_archive: dict[str, Any] = {
+                "url": _download_url(translations, version),
+                "keepExisting": True,
+            }
+            _add_authentication(translation_archive, translations)
+            archives.append(translation_archive)
+    else:
+        if server_assets_url is None:
+            raise ValueError("Server assets URL is required for a server full-pack manifest")
+        archives.append(
+            {
+                "url": server_assets_url,
+                "keepExisting": True,
+            }
+        )
 
     config_path = asset_path(config, config_version)
     with ZipFile(config_path) as config_zip:
         text_files = {
             destination: assembler._modify_config_file(destination, config_zip.read(destination)).decode("utf-8")
             for destination in assembler.modified_config_files
+            if destination not in assembler.exclusions[side]
         }
 
     return {
@@ -79,10 +94,20 @@ def write_fullpack_manifest(
     manifest_path: Path,
     assembler: ZipAssembler,
     asset_path: AssetPathResolver = get_asset_version_cache_location,
+    *,
+    side: Side = Side.CLIENT_JAVA9,
+    server_assets_url: str | None = None,
 ) -> None:
-    path = fullpack_manifest_path(manifest_path)
+    path = fullpack_manifest_path(manifest_path, side)
     path.parent.mkdir(parents=True, exist_ok=True)
-    data = json.dumps(build_fullpack_manifest(assembler, asset_path), indent=2, ensure_ascii=False) + "\n"
+    data = (
+        json.dumps(
+            build_fullpack_manifest(assembler, asset_path, side=side, server_assets_url=server_assets_url),
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
     atomic_write_text(path, data)
 
 
