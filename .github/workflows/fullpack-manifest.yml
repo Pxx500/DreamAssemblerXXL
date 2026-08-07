@@ -2,8 +2,6 @@ name: Full-pack manifest
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '20 5 * * *'
 
 permissions:
   contents: write
@@ -53,15 +51,7 @@ jobs:
           path: cache
           key: fullpack-config-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
 
-      - name: Publish manifest
+      - name: Mirror translations and publish manifest
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          manifest=releases/manifests/fullpack/daily.json
-          if gh release view fullpack-daily > /dev/null 2>&1; then
-            gh release upload fullpack-daily "$manifest" --clobber
-          else
-            gh release create fullpack-daily "$manifest" --prerelease \
-              --title "Full-pack daily manifest" \
-              --notes "Generated from the current GTNH daily mod list."
-          fi
+        run: uv run python -m daxxl.cli.publish_fullpack_manifest releases/manifests/fullpack/daily.json

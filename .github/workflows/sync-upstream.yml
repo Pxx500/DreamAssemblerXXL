@@ -6,6 +6,7 @@ on:
     - cron: '43 * * * *'
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -77,6 +78,20 @@ jobs:
           fi
 
           head_sha=$(git rev-parse HEAD)
+          publish_manifest() {
+            for attempt in $(seq 1 60); do
+              git fetch origin master
+              if git merge-base --is-ancestor "$head_sha" origin/master; then
+                gh workflow run fullpack-manifest.yml --ref master
+                return 0
+              fi
+              sleep 2
+            done
+
+            echo "Merged sync commit did not appear on master in time."
+            return 1
+          }
+
           for attempt in $(seq 1 30); do
             pr=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}")
             remote_head=$(jq -r .head.sha <<<"$pr")
@@ -106,7 +121,8 @@ jobs:
           merge_status=$(jq -r .status <<<"$merge_request")
 
           if [ "$merge_status" = "merged" ] || [ "$merge_status" = "enqueued" ]; then
-            exit 0
+            publish_manifest
+            exit $?
           fi
           if [ "$merge_status" != "pending" ]; then
             echo "Unexpected asynchronous merge status: $merge_status"
@@ -122,7 +138,8 @@ jobs:
             merge_status=$(jq -r .status <<<"$merge_result")
 
             if [ "$merge_status" = "merged" ] || [ "$merge_status" = "enqueued" ]; then
-              exit 0
+              publish_manifest
+              exit $?
             fi
             if [ "$merge_status" = "failed" ]; then
               jq -r .details.message <<<"$merge_result"
