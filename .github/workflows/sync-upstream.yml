@@ -82,7 +82,7 @@ jobs:
             for attempt in $(seq 1 60); do
               git fetch origin master
               if git merge-base --is-ancestor "$head_sha" origin/master; then
-                gh workflow run fullpack-manifest.yml --ref master
+                gh workflow run fullpack-manifest.yml --repo "$GITHUB_REPOSITORY" --ref master
                 return 0
               fi
               sleep 2
