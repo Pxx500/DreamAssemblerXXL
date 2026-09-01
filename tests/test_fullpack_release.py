@@ -199,7 +199,7 @@ def test_failed_translation_upload_does_not_replace_manifest(tmp_path: Path) -> 
     assert ("upload", "daily.json") not in release.events
 
 
-def test_cleanup_keeps_two_translation_generations_and_unrelated_assets() -> None:
+def test_cleanup_keeps_two_translation_generations_per_locale_and_unrelated_assets() -> None:
     assets = [
         ReleaseAsset(1, "daily.json"),
         ReleaseAsset(2, "unrelated.zip"),
@@ -207,6 +207,17 @@ def test_cleanup_keeps_two_translation_generations_and_unrelated_assets() -> Non
         ReleaseAsset(4, "GTNH-de_DE-Translation-Daily-2026-08-05+412.zip"),
         ReleaseAsset(5, "GTNH-pl_PL-Translation-Daily-2026-08-06+413.zip"),
         ReleaseAsset(6, "GTNH-de_DE-Translation-Daily-2026-08-06+413.zip"),
+        ReleaseAsset(7, "GTNH-pl_PL-Translation-Daily-2026-08-05+412.zip"),
     ]
 
     assert expired_translation_asset_ids(assets) == [3]
+
+
+def test_cleanup_retains_a_locale_that_lags_behind_other_translations() -> None:
+    assets = [
+        ReleaseAsset(1, "GTNH-zh_CN-Translation-Daily-2026-08-28+438.zip"),
+        ReleaseAsset(2, "GTNH-de_DE-Translation-Daily-2026-08-30+440.zip"),
+        ReleaseAsset(3, "GTNH-pl_PL-Translation-Daily-2026-08-31+441.zip"),
+    ]
+
+    assert expired_translation_asset_ids(assets) == []
