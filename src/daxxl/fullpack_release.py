@@ -14,7 +14,7 @@ from daxxl.utils import atomic_write_text
 
 TRANSLATIONS_REPOSITORY = ("GTNewHorizons", "GTNH-Translations")
 RELEASE_TAG = "fullpack-daily"
-TRANSLATION_FILENAME = re.compile(r"^GTNH-[^-]+-Translation-Daily-(?P<date>\d{4}-\d{2}-\d{2})\+(?P<build>\d+)\.zip$")
+TRANSLATION_FILENAME = re.compile(r"^GTNH-(?P<locale>[^-]+)-Translation-Daily-(?P<date>\d{4}-\d{2}-\d{2})\+(?P<build>\d+)\.zip$")
 
 
 @dataclass(frozen=True)
@@ -101,14 +101,18 @@ def _mirrored_url(repository: str, filename: str) -> str:
 
 
 def expired_translation_asset_ids(assets: list[ReleaseAsset]) -> list[int]:
-    versioned_assets: list[tuple[ReleaseAsset, tuple[str, int]]] = []
+    versioned_assets: list[tuple[ReleaseAsset, str, tuple[str, int]]] = []
     for asset in assets:
         match = TRANSLATION_FILENAME.fullmatch(asset.name)
         if match is not None:
-            versioned_assets.append((asset, (match["date"], int(match["build"]))))
+            versioned_assets.append((asset, match["locale"], (match["date"], int(match["build"]))))
 
-    retained_generations = set(sorted({generation for _, generation in versioned_assets}, reverse=True)[:2])
-    return [asset.id for asset, generation in versioned_assets if generation not in retained_generations]
+    generations_by_locale: dict[str, set[tuple[str, int]]] = {}
+    for _, locale, generation in versioned_assets:
+        generations_by_locale.setdefault(locale, set()).add(generation)
+
+    retained_generations = {locale: set(sorted(generations, reverse=True)[:2]) for locale, generations in generations_by_locale.items()}
+    return [asset.id for asset, locale, generation in versioned_assets if generation not in retained_generations[locale]]
 
 
 async def publish_fullpack_manifest(
