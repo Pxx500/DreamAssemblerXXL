@@ -1,11 +1,11 @@
 {
   "version": "previous_daily",
   "last_version": "previous_daily",
-  "last_updated": "2026-09-01T16:55:33.918821+00:00",
-  "config": "2.9.0-nightly-2026-08-31",
+  "last_updated": "2026-09-05T21:01:35.520124+00:00",
+  "config": "2.9.0-nightly-2026-09-05-04",
   "github_mods": {
     "AdventureBackpack2": {
-      "version": "1.4.25-GTNH",
+      "version": "1.4.26-GTNH",
       "side": "BOTH"
     },
     "AE2FluidCraft-Rework": {
@@ -25,7 +25,7 @@
       "side": "BOTH"
     },
     "Applied-Energistics-2-Unofficial": {
-      "version": "rv3-beta-1046-GTNH",
+      "version": "rv3-beta-1050-GTNH",
       "side": "BOTH"
     },
     "ArchitectureCraft": {
@@ -41,7 +41,7 @@
       "side": "BOTH"
     },
     "Avaritiaddons": {
-      "version": "1.9.5-GTNH",
+      "version": "1.9.6-GTNH",
       "side": "BOTH"
     },
     "bdlib": {
@@ -53,19 +53,19 @@
       "side": "BOTH"
     },
     "BetterCrashes": {
-      "version": "1.4.6-GTNH",
+      "version": "1.4.7-GTNH",
       "side": "CLIENT"
     },
     "BetterLoadingScreen": {
-      "version": "1.7.12-GTNH",
+      "version": "1.7.16-GTNH",
       "side": "CLIENT"
     },
     "BetterP2P": {
-      "version": "1.4.6",
+      "version": "1.4.7",
       "side": "BOTH"
     },
     "BetterQuesting": {
-      "version": "3.8.82-GTNH",
+      "version": "3.8.84-GTNH",
       "side": "BOTH"
     },
     "Binnie": {
@@ -117,7 +117,7 @@
       "side": "BOTH"
     },
     "CodeChickenCore": {
-      "version": "1.4.18",
+      "version": "1.4.19",
       "side": "BOTH"
     },
     "Computronics": {
@@ -149,11 +149,11 @@
       "side": "BOTH"
     },
     "EnderCore": {
-      "version": "0.5.14",
+      "version": "0.5.15",
       "side": "BOTH"
     },
     "EnderIO": {
-      "version": "2.10.41",
+      "version": "2.10.44",
       "side": "BOTH"
     },
     "EnderStorage": {
@@ -209,7 +209,7 @@
       "side": "BOTH"
     },
     "GT5-Unofficial": {
-      "version": "5.09.54.122",
+      "version": "5.09.54.132",
       "side": "BOTH"
     },
     "GTNH-TC-Wands": {
@@ -217,7 +217,7 @@
       "side": "BOTH"
     },
     "GTNHLib": {
-      "version": "0.11.44",
+      "version": "0.11.46",
       "side": "BOTH"
     },
     "Hardcore-Ender-Expansion": {
@@ -229,7 +229,7 @@
       "side": "BOTH"
     },
     "Hodgepodge": {
-      "version": "2.7.194",
+      "version": "2.7.196",
       "side": "BOTH"
     },
     "HoloInventory": {
@@ -333,7 +333,7 @@
       "side": "BOTH"
     },
     "NewHorizonsCoreMod": {
-      "version": "2.9.56",
+      "version": "2.9.61",
       "side": "BOTH"
     },
     "Nodal-Mechanics": {
@@ -345,11 +345,11 @@
       "side": "BOTH"
     },
     "NotEnoughItems": {
-      "version": "2.8.129-GTNH",
+      "version": "2.8.130-GTNH",
       "side": "BOTH"
     },
     "Nuclear-Control": {
-      "version": "2.7.12",
+      "version": "2.7.13",
       "side": "BOTH"
     },
     "oauth": {
@@ -365,7 +365,7 @@
       "side": "BOTH"
     },
     "OpenComputers": {
-      "version": "1.12.59-GTNH",
+      "version": "1.12.61-GTNH",
       "side": "BOTH"
     },
     "OpenModsLib": {
@@ -373,7 +373,7 @@
       "side": "BOTH"
     },
     "OpenModularTurrets": {
-      "version": "2.4.6",
+      "version": "2.4.8",
       "side": "BOTH"
     },
     "OpenSecurity": {
@@ -429,7 +429,7 @@
       "side": "BOTH"
     },
     "Share-Where-I-am": {
-      "version": "2.1.10",
+      "version": "2.1.11",
       "side": "BOTH"
     },
     "SleepingBags": {
@@ -505,7 +505,7 @@
       "side": "BOTH"
     },
     "ThaumicTinkerer": {
-      "version": "2.12.31",
+      "version": "2.12.32",
       "side": "BOTH"
     },
     "TiC-Tooltips": {
@@ -513,7 +513,7 @@
       "side": "CLIENT"
     },
     "TinkersConstruct": {
-      "version": "1.14.106-GTNH",
+      "version": "1.14.108-GTNH",
       "side": "BOTH"
     },
     "TinkersMechworks": {
@@ -577,7 +577,7 @@
       "side": "BOTH"
     },
     "WitcheryExtras": {
-      "version": "1.4.18",
+      "version": "1.4.20",
       "side": "BOTH"
     },
     "WitchingGadgets": {
@@ -601,7 +601,7 @@
       "side": "BOTH"
     },
     "TX-Loader": {
-      "version": "1.8.12",
+      "version": "1.9",
       "side": "CLIENT"
     },
     "FloodLights": {
@@ -673,7 +673,7 @@
       "side": "CLIENT"
     },
     "Mobs-Info": {
-      "version": "0.5.20-GTNH",
+      "version": "0.5.21-GTNH",
       "side": "BOTH"
     },
     "BeeBetterAtBees-GTNH": {
@@ -693,15 +693,15 @@
       "side": "CLIENT"
     },
     "ThaumicBoots": {
-      "version": "1.5.12",
+      "version": "1.5.13",
       "side": "BOTH"
     },
     "Amazing-Trophies": {
-      "version": "1.4.8",
+      "version": "1.4.9",
       "side": "BOTH"
     },
     "ServerUtilities": {
-      "version": "2.4.7",
+      "version": "2.4.9",
       "side": "BOTH"
     },
     "Tinkers-Defense": {
@@ -713,7 +713,7 @@
       "side": "BOTH"
     },
     "Angelica": {
-      "version": "2.2.8",
+      "version": "2.2.10",
       "side": "CLIENT"
     },
     "AkashicTome": {
@@ -737,15 +737,15 @@
       "side": "BOTH"
     },
     "InventoryBogoSorter": {
-      "version": "1.3.47-GTNH",
+      "version": "1.3.50-GTNH",
       "side": "BOTH"
     },
     "MatterManipulator": {
-      "version": "0.1.54-GTNH",
+      "version": "0.1.55-GTNH",
       "side": "BOTH"
     },
     "Salis-Arcana": {
-      "version": "1.1.70-GTNH",
+      "version": "1.1.71-GTNH",
       "side": "BOTH"
     },
     "Darkerer": {
@@ -753,7 +753,7 @@
       "side": "BOTH"
     },
     "Et-Futurum-Requiem": {
-      "version": "2.6.57-GTNH",
+      "version": "2.6.58-GTNH",
       "side": "BOTH"
     },
     "IronTankMinecarts": {
@@ -805,7 +805,7 @@
       "side": "BOTH"
     },
     "AspectRecipeIndex": {
-      "version": "1.1.3",
+      "version": "1.1.4",
       "side": "BOTH"
     },
     "GTNH-Credits": {
@@ -849,7 +849,7 @@
       "side": "BOTH"
     },
     "GuideNH": {
-      "version": "1.3.24",
+      "version": "1.3.27",
       "side": "BOTH"
     },
     "Automagy-GTNH": {
@@ -951,7 +951,7 @@
       "side": "BOTH"
     },
     "Extreme Sound Muffler": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "side": "CLIENT"
     },
     "JourneyMap": {
@@ -963,7 +963,7 @@
       "side": "BOTH"
     },
     "Chunk API": {
-      "version": "0.8.3",
+      "version": "0.8.4",
       "side": "BOTH"
     },
     "FalsepatternLib": {
