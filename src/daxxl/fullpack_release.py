@@ -15,6 +15,7 @@ from daxxl.utils import atomic_write_text
 TRANSLATIONS_REPOSITORY = ("GTNewHorizons", "GTNH-Translations")
 RELEASE_TAG = "fullpack-daily"
 TRANSLATION_FILENAME = re.compile(r"^GTNH-(?P<locale>[^-]+)-Translation-Daily-(?P<date>\d{4}-\d{2}-\d{2})\+(?P<build>\d+)\.zip$")
+SERVER_ASSET_FILENAME = re.compile(r"^server-assets-[0-9a-f]{64}\.zip$")
 
 
 @dataclass(frozen=True)
@@ -143,8 +144,22 @@ async def publish_fullpack_manifest(
             archive["url"] = _mirrored_url(repository, filename)
 
     for asset in companion_assets:
-        release.upload(asset, clobber=True)
+        if asset.name not in existing_names:
+            release.upload(asset)
     atomic_write_text(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
     release.upload(manifest_path, clobber=True)
-    for asset_id in expired_translation_asset_ids(release.assets()):
+    assets = release.assets()
+    for asset_id in expired_translation_asset_ids(assets):
         release.delete(asset_id)
+
+    referenced_server_assets = {
+        asset.name
+        for asset in assets
+        if SERVER_ASSET_FILENAME.fullmatch(asset.name) and any(archive["url"] == _mirrored_url(repository, asset.name) for archive in manifest["archives"])
+    }
+    if referenced_server_assets:
+        server_assets = sorted((asset for asset in assets if SERVER_ASSET_FILENAME.fullmatch(asset.name)), key=lambda asset: asset.id, reverse=True)
+        retained_names = referenced_server_assets | {asset.name for asset in server_assets[:2]}
+        for asset in server_assets:
+            if asset.name not in retained_names:
+                release.delete(asset.id)

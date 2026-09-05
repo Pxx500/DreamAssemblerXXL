@@ -1,3 +1,4 @@
+import hashlib
 import os
 from zipfile import ZIP_DEFLATED, ZipFile
 
@@ -45,6 +46,14 @@ async def generate_fullpack_manifest() -> None:
         with ZipFile(server_assets_path, "w", compression=ZIP_DEFLATED) as archive:
             await assembler.add_server_assets(archive, ServerBrand.forge, Side.SERVER_JAVA9)
             await normalize_archive_permissions(archive)
+
+        # Ignore ZIP timestamps so unchanged contents reuse the same cached asset.
+        digest = hashlib.sha256()
+        with ZipFile(server_assets_path) as archive:
+            for filename in sorted(archive.namelist()):
+                digest.update(filename.encode("utf-8") + b"\0")
+                digest.update(hashlib.sha256(archive.read(filename)).digest())
+        server_assets_path = server_assets_path.replace(server_assets_path.with_name(f"server-assets-{digest.hexdigest()}.zip"))
 
         repository = os.environ.get("GITHUB_REPOSITORY", "Pxx500/DreamAssemblerXXL")
         server_assets_url = f"https://github.com/{repository}/releases/download/{RELEASE_TAG}/{server_assets_path.name}"
