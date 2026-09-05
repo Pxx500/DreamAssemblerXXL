@@ -27,10 +27,11 @@ class FakeRelease:
         if path.name == "daily.json":
             self.uploaded_manifest = json.loads(path.read_text(encoding="utf-8"))
         else:
-            self._assets.append(ReleaseAsset(len(self._assets) + 1, path.name))
+            self._assets.append(ReleaseAsset(max((asset.id for asset in self._assets), default=0) + 1, path.name))
 
     def delete(self, asset_id: int) -> None:
         self.events.append(("delete", str(asset_id)))
+        self._assets = [asset for asset in self._assets if asset.id != asset_id]
 
 
 def write_manifest(path: Path) -> None:
@@ -72,6 +73,7 @@ def test_publish_mirrors_translations_before_replacing_manifest(tmp_path: Path) 
         [
             ReleaseAsset(10, "GTNH-pl_PL-Translation-Daily-2026-08-04+411.zip"),
             ReleaseAsset(11, "GTNH-pl_PL-Translation-Daily-2026-08-05+412.zip"),
+            *[ReleaseAsset(index + 20, f"server-assets-{character * 64}.zip") for index, character in enumerate("abc")],
         ]
     )
 
@@ -152,6 +154,65 @@ def test_publish_uploads_companion_assets_before_the_manifest(tmp_path: Path) ->
         ("upload", "server-assets.zip"),
         ("upload", "daily-server.json"),
     ]
+
+
+def test_publish_reuses_an_existing_companion_asset(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "daily-server.json"
+    manifest_path.write_text(json.dumps({"version": 1, "files": [], "archives": [], "textFiles": {}}), encoding="utf-8")
+    server_assets = tmp_path / f"server-assets-{'a' * 64}.zip"
+    server_assets.write_bytes(b"server")
+    release = FakeRelease([ReleaseAsset(1, server_assets.name)], failing_upload=server_assets.name)
+
+    async def run() -> None:
+        async with httpx.AsyncClient() as client:
+            await publish_fullpack_manifest(manifest_path, "Pxx500/DreamAssemblerXXL", release, client, [server_assets])
+
+    asyncio.run(run())
+
+    assert release.events == [("ensure", ""), ("upload", "daily-server.json")]
+
+
+def test_server_publication_prunes_old_archives_after_publishing_and_preserves_referenced_assets(tmp_path: Path) -> None:
+    names = [f"server-assets-{character * 64}.zip" for character in "abcd"]
+    manifest_path = tmp_path / "daily-server.json"
+    manifest_path.write_text(
+        json.dumps({"version": 1, "files": [], "archives": [{"url": f"https://github.com/example/repo/releases/download/fullpack-daily/{names[0]}"}]}),
+        encoding="utf-8",
+    )
+    release = FakeRelease([ReleaseAsset(index + 1, name) for index, name in enumerate([*names, "server-assets.zip", "unrelated.zip"])])
+
+    async def run() -> None:
+        async with httpx.AsyncClient() as client:
+            await publish_fullpack_manifest(manifest_path, "example/repo", release, client)
+
+    asyncio.run(run())
+
+    assert {asset.name for asset in release.assets()} == {names[0], names[2], names[3], "server-assets.zip", "unrelated.zip", "daily-server.json"}
+    assert release.events.index(("upload", "daily-server.json")) < release.events.index(("delete", "2"))
+
+
+def test_failed_server_manifest_upload_keeps_existing_server_assets(tmp_path: Path) -> None:
+    names = [f"server-assets-{character * 64}.zip" for character in "abc"]
+    manifest_path = tmp_path / "daily-server.json"
+    manifest_path.write_text(
+        json.dumps({"version": 1, "files": [], "archives": [{"url": f"https://github.com/example/repo/releases/download/fullpack-daily/{names[-1]}"}]}),
+        encoding="utf-8",
+    )
+    release = FakeRelease([ReleaseAsset(index + 1, name) for index, name in enumerate(names)], failing_upload=manifest_path.name)
+
+    async def run() -> None:
+        async with httpx.AsyncClient() as client:
+            await publish_fullpack_manifest(manifest_path, "example/repo", release, client)
+
+    try:
+        asyncio.run(run())
+    except RuntimeError as error:
+        assert str(error) == "upload failed"
+    else:
+        raise AssertionError("failed manifest upload should stop publication")
+
+    assert {asset.name for asset in release.assets()} == set(names)
+    assert all(event != "delete" for event, _ in release.events)
 
 
 def test_failed_translation_download_does_not_replace_manifest(tmp_path: Path) -> None:
