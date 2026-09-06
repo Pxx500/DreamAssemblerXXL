@@ -18463,7 +18463,7 @@
     },
     {
       "name": "Applied-Energistics-2-Unofficial",
-      "latest_version": "rv3-beta-1050-GTNH",
+      "latest_version": "rv3-beta-1051-GTNH",
       "private": false,
       "versions": [
         {
@@ -27554,6 +27554,16 @@
           "filename": "appliedenergistics2-rv3-beta-1050-GTNH.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/Applied-Energistics-2-Unofficial/releases/assets/546277495",
           "browser_download_url": "https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/releases/download/rv3-beta-1050-GTNH/appliedenergistics2-rv3-beta-1050-GTNH.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "rv3-beta-1051-GTNH",
+          "changelog": "## What's Changed\n* Fix Annihilation Plane crash when loading Forge Multipart cable buses by @Kogepan229 in https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/1577\n* Keep the border gray and dark to maintain ae2 identity by @Worive in https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/pull/1582\n\n\n**Full Changelog**: https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/compare/rv3-beta-1050-GTNH...rv3-beta-1051-GTNH\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T12:12:11+00:00",
+          "filename": "appliedenergistics2-rv3-beta-1051-GTNH.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/Applied-Energistics-2-Unofficial/releases/assets/547153837",
+          "browser_download_url": "https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/releases/download/rv3-beta-1051-GTNH/appliedenergistics2-rv3-beta-1051-GTNH.jar",
           "extra_assets": []
         }
       ],
@@ -66626,7 +66636,7 @@
     },
     {
       "name": "GT5-Unofficial",
-      "latest_version": "5.09.54.133",
+      "latest_version": "5.09.54.134",
       "private": false,
       "versions": [
         {
@@ -92978,6 +92988,16 @@
           "download_url": "https://api.github.com/repos/GTNewHorizons/GT5-Unofficial/releases/assets/546438714",
           "browser_download_url": "https://github.com/GTNewHorizons/GT5-Unofficial/releases/download/5.09.54.133/gregtech-5.09.54.133.jar",
           "extra_assets": []
+        },
+        {
+          "version_tag": "5.09.54.134",
+          "changelog": "## What's Changed\n* fix spinmatron not caring about fluid if the recipe tier is ulv by @chrombread in https://github.com/GTNewHorizons/GT5-Unofficial/pull/7954\n\n\n**Full Changelog**: https://github.com/GTNewHorizons/GT5-Unofficial/compare/5.09.54.133...5.09.54.134\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T12:13:36+00:00",
+          "filename": "gregtech-5.09.54.134.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/GT5-Unofficial/releases/assets/547155191",
+          "browser_download_url": "https://github.com/GTNewHorizons/GT5-Unofficial/releases/download/5.09.54.134/gregtech-5.09.54.134.jar",
+          "extra_assets": []
         }
       ],
       "license": "GNU Lesser General Public License v3.0",
@@ -104934,7 +104954,7 @@
     },
     {
       "name": "Hodgepodge",
-      "latest_version": "2.7.196",
+      "latest_version": "2.7.197",
       "private": false,
       "versions": [
         {
@@ -111045,6 +111065,16 @@
           "filename": "hodgepodge-2.7.196.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/Hodgepodge/releases/assets/544710700",
           "browser_download_url": "https://github.com/GTNewHorizons/Hodgepodge/releases/download/2.7.196/hodgepodge-2.7.196.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "2.7.197",
+          "changelog": "## What's Changed\n* Localize vanilla disconnect messages by @Eldrinn-Elantey in https://github.com/GTNewHorizons/Hodgepodge/pull/994\n\n\n**Full Changelog**: https://github.com/GTNewHorizons/Hodgepodge/compare/2.7.196...2.7.197\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T12:11:50+00:00",
+          "filename": "hodgepodge-2.7.197.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/Hodgepodge/releases/assets/547153602",
+          "browser_download_url": "https://github.com/GTNewHorizons/Hodgepodge/releases/download/2.7.197/hodgepodge-2.7.197.jar",
           "extra_assets": []
         }
       ],
@@ -121198,7 +121228,7 @@
     },
     {
       "name": "lwjgl3ify",
-      "latest_version": "3.0.31",
+      "latest_version": "3.0.32",
       "private": false,
       "versions": [
         {
@@ -124642,6 +124672,27 @@
               "filename": "lwjgl3ify-3.0.31-multimc.zip",
               "download_url": "https://api.github.com/repos/GTNewHorizons/lwjgl3ify/releases/assets/493471295",
               "browser_download_url": "https://github.com/GTNewHorizons/lwjgl3ify/releases/download/3.0.31/lwjgl3ify-3.0.31-multimc.zip"
+            }
+          ]
+        },
+        {
+          "version_tag": "3.0.32",
+          "changelog": "## What's Changed\n* Fix LWJGL2 scancode conversion in input events by @Chitak985 in https://github.com/GTNewHorizons/lwjgl3ify/pull/365\n* Fix: Can't auto-approve the relaunch when hideSettingsOnLauncher == true by @wufe8 in https://github.com/GTNewHorizons/lwjgl3ify/pull/364\n* Fix lost scroll notches on high-resolution mouse wheels by @kevinrudde in https://github.com/GTNewHorizons/lwjgl3ify/pull/363\n* Fix relaunch arg file for non-ASCII paths by @alppp in https://github.com/GTNewHorizons/lwjgl3ify/pull/362\n* Add version information for embedded ASM by @ah-OOG-ah in https://github.com/GTNewHorizons/lwjgl3ify/pull/358\n* Avoid filling the stack trace in Lwjgl3AwareException by @Oondanomala in https://github.com/GTNewHorizons/lwjgl3ify/pull/351\n\n## New Contributors\n* @Chitak985 made their first contribution in https://github.com/GTNewHorizons/lwjgl3ify/pull/365\n* @wufe8 made their first contribution in https://github.com/GTNewHorizons/lwjgl3ify/pull/364\n* @kevinrudde made their first contribution in https://github.com/GTNewHorizons/lwjgl3ify/pull/363\n* @alppp made their first contribution in https://github.com/GTNewHorizons/lwjgl3ify/pull/362\n* @Oondanomala made their first contribution in https://github.com/GTNewHorizons/lwjgl3ify/pull/351\n\n**Full Changelog**: https://github.com/GTNewHorizons/lwjgl3ify/compare/3.0.31...3.0.32\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T08:26:58+00:00",
+          "filename": "lwjgl3ify-3.0.32.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/lwjgl3ify/releases/assets/546935833",
+          "browser_download_url": "https://github.com/GTNewHorizons/lwjgl3ify/releases/download/3.0.32/lwjgl3ify-3.0.32.jar",
+          "extra_assets": [
+            {
+              "filename": "lwjgl3ify-3.0.32-forgePatches.jar",
+              "download_url": "https://api.github.com/repos/GTNewHorizons/lwjgl3ify/releases/assets/546935815",
+              "browser_download_url": "https://github.com/GTNewHorizons/lwjgl3ify/releases/download/3.0.32/lwjgl3ify-3.0.32-forgePatches.jar"
+            },
+            {
+              "filename": "lwjgl3ify-3.0.32-multimc.zip",
+              "download_url": "https://api.github.com/repos/GTNewHorizons/lwjgl3ify/releases/assets/546935838",
+              "browser_download_url": "https://github.com/GTNewHorizons/lwjgl3ify/releases/download/3.0.32/lwjgl3ify-3.0.32-multimc.zip"
             }
           ]
         }
