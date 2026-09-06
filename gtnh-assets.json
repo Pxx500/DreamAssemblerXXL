@@ -66616,7 +66616,7 @@
     },
     {
       "name": "GT5-Unofficial",
-      "latest_version": "5.09.54.132",
+      "latest_version": "5.09.54.133",
       "private": false,
       "versions": [
         {
@@ -92957,6 +92957,16 @@
           "filename": "gregtech-5.09.54.132.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/GT5-Unofficial/releases/assets/546280659",
           "browser_download_url": "https://github.com/GTNewHorizons/GT5-Unofficial/releases/download/5.09.54.132/gregtech-5.09.54.132.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "5.09.54.133",
+          "changelog": "## What's Changed\n* Add T4 Structure requirements to Spinmatron tooltip by @Angry3vilbot in https://github.com/GTNewHorizons/GT5-Unofficial/pull/7952\n\n\n**Full Changelog**: https://github.com/GTNewHorizons/GT5-Unofficial/compare/5.09.54.132...5.09.54.133\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-05T23:31:58+00:00",
+          "filename": "gregtech-5.09.54.133.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/GT5-Unofficial/releases/assets/546438714",
+          "browser_download_url": "https://github.com/GTNewHorizons/GT5-Unofficial/releases/download/5.09.54.133/gregtech-5.09.54.133.jar",
           "extra_assets": []
         }
       ],
@@ -191045,6 +191055,6 @@
   ],
   "latest_experimental": 141,
   "latest_successful_experimental": 141,
-  "latest_daily": 721,
-  "latest_successful_daily": 721
+  "latest_daily": 722,
+  "latest_successful_daily": 722
 }
