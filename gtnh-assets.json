@@ -15620,7 +15620,7 @@
     },
     {
       "name": "Angelica",
-      "latest_version": "2.2.10",
+      "latest_version": "2.2.11",
       "private": false,
       "versions": [
         {
@@ -17921,6 +17921,16 @@
           "filename": "angelica-2.2.10.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/Angelica/releases/assets/543854037",
           "browser_download_url": "https://github.com/GTNewHorizons/Angelica/releases/download/2.2.10/angelica-2.2.10.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "2.2.11",
+          "changelog": "## What's Changed\n* Fix tests by @mitchej123 in https://github.com/GTNewHorizons/Angelica/pull/2065\n* Activate FFP when enabling with program 0 by @danyadev in https://github.com/GTNewHorizons/Angelica/pull/2064\n* Fix custom font rendering on BetterLoadingScreen splash by @danyadev in https://github.com/GTNewHorizons/Angelica/pull/2063\n* Add Ukrainian (uk_UA) localization and translate documentation by @Jarnexis in https://github.com/GTNewHorizons/Angelica/pull/1990\n* support custom fonts on macos by @danyadev in https://github.com/GTNewHorizons/Angelica/pull/2066\n\n## New Contributors\n* @Jarnexis made their first contribution in https://github.com/GTNewHorizons/Angelica/pull/1990\n\n**Full Changelog**: https://github.com/GTNewHorizons/Angelica/compare/2.2.10...2.2.11\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T04:27:06+00:00",
+          "filename": "angelica-2.2.11.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/Angelica/releases/assets/546721581",
+          "browser_download_url": "https://github.com/GTNewHorizons/Angelica/releases/download/2.2.11/angelica-2.2.11.jar",
           "extra_assets": []
         }
       ],
@@ -191075,6 +191085,6 @@
   ],
   "latest_experimental": 141,
   "latest_successful_experimental": 141,
-  "latest_daily": 722,
-  "latest_successful_daily": 722
+  "latest_daily": 723,
+  "latest_successful_daily": 723
 }
