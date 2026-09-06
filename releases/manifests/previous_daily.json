@@ -1,8 +1,8 @@
 {
   "version": "previous_daily",
-  "last_version": "previous_daily",
-  "last_updated": "2026-09-05T23:53:32.077658+00:00",
-  "config": "2.9.0-nightly-2026-09-05-04",
+  "last_version": "2.9.0-beta-3",
+  "last_updated": "2026-09-06T12:20:27.022939+00:00",
+  "config": "2.9.0-beta-3",
   "github_mods": {
     "AdventureBackpack2": {
       "version": "1.4.26-GTNH",
@@ -25,7 +25,7 @@
       "side": "BOTH"
     },
     "Applied-Energistics-2-Unofficial": {
-      "version": "rv3-beta-1050-GTNH",
+      "version": "rv3-beta-1051-GTNH",
       "side": "BOTH"
     },
     "ArchitectureCraft": {
@@ -209,7 +209,7 @@
       "side": "BOTH"
     },
     "GT5-Unofficial": {
-      "version": "5.09.54.133",
+      "version": "5.09.54.134",
       "side": "BOTH"
     },
     "GTNH-TC-Wands": {
@@ -229,7 +229,7 @@
       "side": "BOTH"
     },
     "Hodgepodge": {
-      "version": "2.7.196",
+      "version": "2.7.197",
       "side": "BOTH"
     },
     "HoloInventory": {
@@ -661,7 +661,7 @@
       "side": "BOTH"
     },
     "lwjgl3ify": {
-      "version": "3.0.31",
+      "version": "3.0.32",
       "side": "BOTH_JAVA9"
     },
     "amunra": {
@@ -713,7 +713,7 @@
       "side": "BOTH"
     },
     "Angelica": {
-      "version": "2.2.10",
+      "version": "2.2.11",
       "side": "CLIENT"
     },
     "AkashicTome": {
@@ -849,7 +849,7 @@
       "side": "BOTH"
     },
     "GuideNH": {
-      "version": "1.3.27",
+      "version": "1.3.29",
       "side": "BOTH"
     },
     "Automagy-GTNH": {
