@@ -4578,9 +4578,9 @@
         "version_tag": "2.9.0-beta-3",
         "changelog": "",
         "prerelease": false,
-        "tagged_at": "2026-09-05T21:11:38+00:00",
+        "tagged_at": "2026-09-06T02:27:04+00:00",
         "filename": "2.9.0-beta-3.zip",
-        "download_url": "https://api.github.com/repos/GTNewHorizons/GT-New-Horizons-Modpack/releases/assets/546319631",
+        "download_url": "https://api.github.com/repos/GTNewHorizons/GT-New-Horizons-Modpack/releases/assets/546614693",
         "browser_download_url": "https://github.com/GTNewHorizons/GT-New-Horizons-Modpack/releases/download/2.9.0-beta-3/2.9.0-beta-3.zip",
         "extra_assets": []
       },
@@ -103720,7 +103720,7 @@
     },
     {
       "name": "GuideNH",
-      "latest_version": "1.3.27",
+      "latest_version": "1.3.29",
       "private": false,
       "versions": [
         {
@@ -103971,6 +103971,26 @@
           "filename": "guidenh-1.3.27.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/GuideNH/releases/assets/546069508",
           "browser_download_url": "https://github.com/GTNewHorizons/GuideNH/releases/download/1.3.27/guidenh-1.3.27.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "1.3.28",
+          "changelog": "## What's Changed\n* Optimize runtime GuideScene discovery by @ABKQPO in https://github.com/GTNewHorizons/GuideNH/pull/72\n\n\n**Full Changelog**: https://github.com/GTNewHorizons/GuideNH/compare/1.3.27...1.3.28\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T01:40:38+00:00",
+          "filename": "guidenh-1.3.28.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/GuideNH/releases/assets/546573648",
+          "browser_download_url": "https://github.com/GTNewHorizons/GuideNH/releases/download/1.3.28/guidenh-1.3.28.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "1.3.29",
+          "changelog": "## What's Changed\n* Final resource reload optimization by @danyadev in https://github.com/GTNewHorizons/GuideNH/pull/73\n\n\n**Full Changelog**: https://github.com/GTNewHorizons/GuideNH/compare/1.3.28...1.3.29\n",
+          "prerelease": false,
+          "tagged_at": "2026-09-06T02:18:42+00:00",
+          "filename": "guidenh-1.3.29.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/GuideNH/releases/assets/546607527",
+          "browser_download_url": "https://github.com/GTNewHorizons/GuideNH/releases/download/1.3.29/guidenh-1.3.29.jar",
           "extra_assets": []
         }
       ],
