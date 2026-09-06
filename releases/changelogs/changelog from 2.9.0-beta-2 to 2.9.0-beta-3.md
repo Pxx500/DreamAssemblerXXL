@@ -681,10 +681,11 @@ DreamAssemblerXXL wasn't able to find the changelog related to this update. It i
 >* Change modid by @Caedis in https://github.com/GTNewHorizons/Freecam/pull/22 (1.0.11)
 >* feat: hide mod overlays while in freecam by @Caedis in https://github.com/GTNewHorizons/Freecam/pull/21 (1.0.10)
 
-# Updated - GT5-Unofficial - 5.09.54.20 --> 5.09.54.132
-**Full Changelog**: https://github.com/GTNewHorizons/GT5-Unofficial/compare/5.09.54.20...5.09.54.132
+# Updated - GT5-Unofficial - 5.09.54.20 --> 5.09.54.133
+**Full Changelog**: https://github.com/GTNewHorizons/GT5-Unofficial/compare/5.09.54.20...5.09.54.133
 
 ## What's Changed:
+>* Add T4 Structure requirements to Spinmatron tooltip by @Angry3vilbot in https://github.com/GTNewHorizons/GT5-Unofficial/pull/7952 (5.09.54.133)
 >* Fix the SSASS renderer by @boubou19 in https://github.com/GTNewHorizons/GT5-Unofficial/pull/7950 (5.09.54.132)
 >* Add readout to OATN for next nanite by @ReignOfFROZE in https://github.com/GTNewHorizons/GT5-Unofficial/pull/7940 (5.09.54.132)
 >* perf: optimize ejection performance by @hinyb in https://github.com/GTNewHorizons/GT5-Unofficial/pull/7936 (5.09.54.131)
@@ -1247,10 +1248,12 @@ DreamAssemblerXXL wasn't able to find the changelog related to this update. It i
 >* Fix GraviChestPlate flight desync and swapped energy messages by @Eldrinn-Elantey in https://github.com/GTNewHorizons/Gravitation-Suite-Neo/pull/36 (1.3.14)
 >* Send GraviSuite item and armor status messages server-side only by @Eldrinn-Elantey in https://github.com/GTNewHorizons/Gravitation-Suite-Neo/pull/35 (1.3.13)
 
-# Updated - GuideNH - 1.3.11 --> 1.3.27
-**Full Changelog**: https://github.com/GTNewHorizons/GuideNH/compare/1.3.11...1.3.27
+# Updated - GuideNH - 1.3.11 --> 1.3.29
+**Full Changelog**: https://github.com/GTNewHorizons/GuideNH/compare/1.3.11...1.3.29
 
 ## What's Changed:
+>* Final resource reload optimization by @danyadev in https://github.com/GTNewHorizons/GuideNH/pull/73 (1.3.29)
+>* Optimize runtime GuideScene discovery by @ABKQPO in https://github.com/GTNewHorizons/GuideNH/pull/72 (1.3.28)
 >* Optimize resource reload by @danyadev in https://github.com/GTNewHorizons/GuideNH/pull/70 (1.3.27)
 >* Add extensible Scene Editor controls by @ABKQPO in https://github.com/GTNewHorizons/GuideNH/pull/71 (1.3.27)
 >* Add navigation search keywords by @ABKQPO in https://github.com/GTNewHorizons/GuideNH/pull/69 (1.3.26)
