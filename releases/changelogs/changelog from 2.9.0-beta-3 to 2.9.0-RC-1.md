@@ -466,7 +466,7 @@ Mod is client-side only.
 ## What's Changed:
 >* Add WorldContextRegistry as API for mods like LittleBlocks by @DarkShadow44 in https://github.com/GTNewHorizons/GTNHLib/pull/473 (0.11.51)
 >* Fix IterableBitSet iterator removal by @Chitak985 in https://github.com/GTNewHorizons/GTNHLib/pull/474 (0.11.50)
->* Add Ukrainian 🇺🇦 (uk_UA) localization and translate documentation by @Jarnexis in https://github.com/GTNewHorizons/GTNHLib/pull/455 (0.11.48)
+>* Add Ukrainian  (uk_UA) localization and translate documentation by @Jarnexis in https://github.com/GTNewHorizons/GTNHLib/pull/455 (0.11.48)
 >* Add simplex noise utilities by @RecursivePineapple in https://github.com/GTNewHorizons/GTNHLib/pull/428 (0.11.47)
 
 # Updated - Gadomancy - 1.5.15 --> 1.5.16
@@ -515,7 +515,7 @@ Mod is client-side only.
 >* Add option to limit received packet processing by time by @kurrycat2004 in https://github.com/GTNewHorizons/Hodgepodge/pull/1004 (2.7.204)
 >* Add Japanese Localization by @Kokekabe-Madoha in https://github.com/GTNewHorizons/Hodgepodge/pull/996 (2.7.203)
 >* Add audio output device selection and recovery by @Algent in https://github.com/GTNewHorizons/Hodgepodge/pull/1000 (2.7.202)
->* Add Ukrainian 🇺🇦 (uk_UA) localization for Hodgepodge by @Jarnexis in https://github.com/GTNewHorizons/Hodgepodge/pull/971 (2.7.201)
+>* Add Ukrainian  (uk_UA) localization for Hodgepodge by @Jarnexis in https://github.com/GTNewHorizons/Hodgepodge/pull/971 (2.7.201)
 >* Fix HRTF affecting UI sounds and music by @Algent in https://github.com/GTNewHorizons/Hodgepodge/pull/997 (2.7.200)
 >* optimize resource reload by @danyadev in https://github.com/GTNewHorizons/Hodgepodge/pull/995 (2.7.199)
 >* re-optimize OreDictionary class by @danyadev in https://github.com/GTNewHorizons/Hodgepodge/pull/998 (2.7.198)
@@ -633,7 +633,7 @@ DreamAssemblerXXL wasn't able to find the changelog related to this update. It i
 ## What's Changed:
 >* Got GT6 fluid recipes (both lookup and uses) working now too by @OvermindDL1 in https://github.com/GTNewHorizons/NotEnoughEnergistics/pull/86 (1.7.45)
 >* Fix issue with BotaniaRecipeProcessor not working by @vcwdfca in https://github.com/GTNewHorizons/NotEnoughEnergistics/pull/85 (1.7.44)
->* Finally got GT6 fluids to work properly as far as I can test.  Can pu… by @OvermindDL1 in https://github.com/GTNewHorizons/NotEnoughEnergistics/pull/84 (1.7.43)
+>* Finally got GT6 fluids to work properly as far as I can test.  Can pu� by @OvermindDL1 in https://github.com/GTNewHorizons/NotEnoughEnergistics/pull/84 (1.7.43)
 >* Add NEI Fluids Support by @slprime in https://github.com/GTNewHorizons/NotEnoughEnergistics/pull/83 (1.7.42)
 
 # Updated - NotEnoughItems - 2.8.130-GTNH --> 2.8.145-GTNH
