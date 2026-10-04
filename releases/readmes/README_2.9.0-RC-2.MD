@@ -1,6 +1,6 @@
 # GT New Horizons Mod Pack
 
-Version daily is out 2026-10-04
+Version 2.9.0-RC-2 is out 2026-10-04
 
 ## What is GT New Horizons?
 
