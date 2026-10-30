@@ -1,8 +1,8 @@
 {
   "version": "daily",
   "last_version": "previous_daily",
-  "last_updated": "2026-10-30T17:19:48.382697+00:00",
-  "config": "2.9.0-nightly-2026-10-30-2",
+  "last_updated": "2026-10-30T21:56:53.930063+00:00",
+  "config": "2.9.0-nightly-2026-10-30-3",
   "github_mods": {
     "AdventureBackpack2": {
       "version": "1.4.28-GTNH",
@@ -93,7 +93,7 @@
       "side": "BOTH"
     },
     "BuildCraft": {
-      "version": "7.1.64",
+      "version": "7.1.65",
       "side": "BOTH"
     },
     "BuildCraftCompat": {
@@ -137,7 +137,7 @@
       "side": "CLIENT"
     },
     "DefaultWorldGenerator": {
-      "version": "0.4.0",
+      "version": "0.5.0",
       "side": "CLIENT"
     },
     "Draconic-Evolution": {
@@ -209,7 +209,7 @@
       "side": "BOTH"
     },
     "GT5-Unofficial": {
-      "version": "5.09.54.260",
+      "version": "5.09.54.264",
       "side": "BOTH"
     },
     "GTNH-TC-Wands": {
@@ -269,7 +269,7 @@
       "side": "BOTH"
     },
     "Jabba": {
-      "version": "1.5.23",
+      "version": "1.5.24",
       "side": "BOTH"
     },
     "LittleTiles": {
@@ -333,7 +333,7 @@
       "side": "BOTH"
     },
     "NewHorizonsCoreMod": {
-      "version": "2.9.98",
+      "version": "2.9.99",
       "side": "BOTH"
     },
     "Nodal-Mechanics": {
@@ -365,7 +365,7 @@
       "side": "BOTH"
     },
     "OpenComputers": {
-      "version": "1.12.66-GTNH",
+      "version": "1.12.67-GTNH",
       "side": "BOTH"
     },
     "OpenModsLib": {
@@ -657,7 +657,7 @@
       "side": "BOTH"
     },
     "lwjgl3ify": {
-      "version": "3.0.40",
+      "version": "3.0.42",
       "side": "BOTH_JAVA9"
     },
     "amunra": {
@@ -847,6 +847,10 @@
     "SpiceOfLife": {
       "version": "2.2.12-carrot",
       "side": "BOTH"
+    },
+    "Realistic-World-Gen-2": {
+      "version": "2.0.1",
+      "side": "BOTH"
     }
   },
   "external_mods": {
@@ -907,7 +911,7 @@
       "side": "BOTH"
     },
     "TC-4-Tweaks": {
-      "version": "1.5.47",
+      "version": "1.5.48",
       "side": "BOTH"
     },
     "Compact Kinetic Generators": {
@@ -927,7 +931,7 @@
       "side": "BOTH"
     },
     "Archaicfix": {
-      "version": "0.8.0",
+      "version": "0.8.2",
       "side": "BOTH"
     },
     "Hunger-Overhaul": {
@@ -959,7 +963,7 @@
       "side": "BOTH"
     },
     "Tinkers-Gregworks": {
-      "version": "1.0.33",
+      "version": "1.0.34",
       "side": "BOTH"
     },
     "JourneyMap": {
@@ -967,7 +971,7 @@
       "side": "CLIENT"
     },
     "Mobs Info": {
-      "version": "0.6.0",
+      "version": "0.6.2",
       "side": "BOTH"
     },
     "Salis Arcana": {
