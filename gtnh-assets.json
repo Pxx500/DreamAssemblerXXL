@@ -4635,6 +4635,16 @@
         "extra_assets": []
       },
       {
+        "version_tag": "2.9.0",
+        "changelog": "",
+        "prerelease": false,
+        "tagged_at": "2026-10-31T00:20:11+00:00",
+        "filename": "2.9.0.zip",
+        "download_url": "https://api.github.com/repos/GTNewHorizons/GT-New-Horizons-Modpack/releases/assets/693856916",
+        "browser_download_url": "https://github.com/GTNewHorizons/GT-New-Horizons-Modpack/releases/download/2.9.0/2.9.0.zip",
+        "extra_assets": []
+      },
+      {
         "version_tag": "2.9.0-nightly-2025-10-02-pre",
         "changelog": "",
         "prerelease": false,
@@ -167056,7 +167066,7 @@
     },
     {
       "name": "Realistic-World-Gen-2",
-      "latest_version": "2.0.1",
+      "latest_version": "2.0.3",
       "private": false,
       "versions": [
         {
@@ -167077,6 +167087,26 @@
           "filename": "rwg2-2.0.1.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/Realistic-World-Gen-2/releases/assets/693476212",
           "browser_download_url": "https://github.com/GTNewHorizons/Realistic-World-Gen-2/releases/download/2.0.1/rwg2-2.0.1.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "2.0.2",
+          "changelog": "**Full Changelog**: https://github.com/GTNewHorizons/Realistic-World-Gen-2/compare/2.0.1...2.0.2\n",
+          "prerelease": false,
+          "tagged_at": "2026-10-30T23:19:55+00:00",
+          "filename": "rwg2-2.0.2.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/Realistic-World-Gen-2/releases/assets/693726416",
+          "browser_download_url": "https://github.com/GTNewHorizons/Realistic-World-Gen-2/releases/download/2.0.2/rwg2-2.0.2.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "2.0.3",
+          "changelog": "**Full Changelog**: https://github.com/GTNewHorizons/Realistic-World-Gen-2/compare/2.0.1...2.0.3\n",
+          "prerelease": false,
+          "tagged_at": "2026-10-30T23:46:53+00:00",
+          "filename": "rwg2-2.0.3.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/Realistic-World-Gen-2/releases/assets/693783748",
+          "browser_download_url": "https://github.com/GTNewHorizons/Realistic-World-Gen-2/releases/download/2.0.3/rwg2-2.0.3.jar",
           "extra_assets": []
         }
       ],
@@ -170977,7 +171007,7 @@
     },
     {
       "name": "SGCraft",
-      "latest_version": "1.4.13-GTNH",
+      "latest_version": "1.4.14-GTNH",
       "private": false,
       "versions": [
         {
@@ -171129,6 +171159,16 @@
           "filename": "SGCraft-1.4.13-GTNH.jar",
           "download_url": "https://api.github.com/repos/GTNewHorizons/SGCraft/releases/assets/433979708",
           "browser_download_url": "https://github.com/GTNewHorizons/SGCraft/releases/download/1.4.13-GTNH/SGCraft-1.4.13-GTNH.jar",
+          "extra_assets": []
+        },
+        {
+          "version_tag": "1.4.14-GTNH",
+          "changelog": "## What's Changed\n* Improve rendering perfomance with caching by @Simolater in https://github.com/GTNewHorizons/SGCraft/pull/29\n* Fix SGDimensionMap save file name being invalid on Windows by @Algent in https://github.com/GTNewHorizons/SGCraft/pull/30\n\n## New Contributors\n* @Simolater made their first contribution in https://github.com/GTNewHorizons/SGCraft/pull/29\n* @Algent made their first contribution in https://github.com/GTNewHorizons/SGCraft/pull/30\n\n**Full Changelog**: https://github.com/GTNewHorizons/SGCraft/compare/1.4.13-GTNH...1.4.14-GTNH\n",
+          "prerelease": false,
+          "tagged_at": "2026-10-30T23:28:00+00:00",
+          "filename": "SGCraft-1.4.14-GTNH.jar",
+          "download_url": "https://api.github.com/repos/GTNewHorizons/SGCraft/releases/assets/693743997",
+          "browser_download_url": "https://github.com/GTNewHorizons/SGCraft/releases/download/1.4.14-GTNH/SGCraft-1.4.14-GTNH.jar",
           "extra_assets": []
         }
       ],
