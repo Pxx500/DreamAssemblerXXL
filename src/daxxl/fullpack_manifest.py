@@ -1,15 +1,17 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
+from tempfile import TemporaryDirectory
 from typing import Any
 from urllib.parse import urlparse
-from zipfile import ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from daxxl.assembler.downloader import get_asset_version_cache_location
 from daxxl.assembler.platforms.zip_assembler import ZipAssembler
-from daxxl.defs import Side
+from daxxl.defs import CACHE_DIR, Side
 from daxxl.models.gtnh_version import ExtraAsset, GTNHVersion
 from daxxl.models.mod_info import GTNHModInfo
 from daxxl.models.versionable import Versionable
@@ -17,6 +19,42 @@ from daxxl.utils import atomic_write_text
 
 AssetPathResolver = Callable[[Versionable, GTNHVersion], Path]
 InstallationPlan = dict[str, Any]
+
+
+def _config_source_files(assembler: ZipAssembler) -> list[str]:
+    return sorted(
+        path for path in assembler.modified_config_files if any(path not in assembler.exclusions[side] for side in (Side.CLIENT_JAVA9, Side.SERVER_JAVA9))
+    )
+
+
+def fullpack_config_cache_path(assembler: ZipAssembler) -> Path:
+    """Identify the source config files needed by both installation plans."""
+    _, version = assembler.get_config()
+    identity = json.dumps([version.browser_download_url, _config_source_files(assembler)])
+    digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()
+    return CACHE_DIR / "fullpack-config" / f"{digest}.zip"
+
+
+async def prepare_fullpack_config(assembler: ZipAssembler) -> Path:
+    """Cache only config sources that must be rewritten for installation."""
+    path = fullpack_config_cache_path(assembler)
+    if path.exists():
+        return path
+
+    config, version = assembler.get_config()
+    source_path = get_asset_version_cache_location(config, version)
+    if not source_path.exists():
+        assert version.browser_download_url is not None
+        await assembler.context.downloader._download_file(version.browser_download_url, source_path, {})
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with TemporaryDirectory(dir=path.parent) as temporary_directory:
+        temporary_path = Path(temporary_directory) / path.name
+        with ZipFile(source_path) as source, ZipFile(temporary_path, "w", compression=ZIP_DEFLATED) as target:
+            for filename in _config_source_files(assembler):
+                target.writestr(filename, source.read(filename))
+        temporary_path.replace(path)
+    return path
 
 
 def fullpack_manifest_path(manifest_path: Path, side: Side = Side.CLIENT_JAVA9) -> Path:

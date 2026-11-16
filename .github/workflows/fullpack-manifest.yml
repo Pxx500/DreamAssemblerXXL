@@ -28,18 +28,21 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked --all-extras --dev
 
-      - name: Get cache date
-        id: date
-        run: echo "cachedate=$(date '+%G-w%V')" >> "$GITHUB_OUTPUT"
+      - name: Resolve required config cache
+        id: config-cache
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          info=$(uv run python -m daxxl.cli.generate_fullpack_manifest --config-cache-info)
+          echo "path=$(jq -r '.path' <<< "$info")" >> "$GITHUB_OUTPUT"
+          echo "key=$(jq -r '.key' <<< "$info")" >> "$GITHUB_OUTPUT"
 
       - name: Load cached config
         id: load-config-cache
         uses: actions/cache/restore@v5
         with:
-          path: cache
-          key: fullpack-config-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
-          restore-keys: |
-            fullpack-config-${{ runner.os }}-
+          path: ${{ steps.config-cache.outputs.path }}
+          key: fullpack-config-sources-v1-${{ runner.os }}-${{ steps.config-cache.outputs.key }}
 
       - name: Generate manifest
         env:
@@ -50,8 +53,8 @@ jobs:
         if: steps.load-config-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v5
         with:
-          path: cache
-          key: fullpack-config-${{ runner.os }}-${{ steps.date.outputs.cachedate }}
+          path: ${{ steps.config-cache.outputs.path }}
+          key: fullpack-config-sources-v1-${{ runner.os }}-${{ steps.config-cache.outputs.key }}
 
       - name: Publish manifests
         env:

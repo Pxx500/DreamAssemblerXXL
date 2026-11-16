@@ -1,16 +1,71 @@
 import asyncio
+import io
 import json
 from pathlib import Path, PurePosixPath
 from urllib.parse import urlparse
 from zipfile import ZipFile
 
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, MockTransport, Request, Response
 
+from daxxl import fullpack_manifest as fullpack
 from daxxl.app_context import AppContext
+from daxxl.assembler import downloader
 from daxxl.assembler.platforms.zip_assembler import ZipAssembler
 from daxxl.defs import Side
 from daxxl.fullpack_manifest import write_fullpack_manifest
+
+
+def test_compact_config_preserves_both_plans_and_reuses_only_required_sources(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "test")
+    monkeypatch.setattr(downloader, "CACHE_DIR", tmp_path / "downloads")
+    monkeypatch.setattr(fullpack, "CACHE_DIR", tmp_path / "cache")
+    source = io.BytesIO()
+    with ZipFile(source, "w") as archive:
+        archive.writestr("config/txloader/load/mainmenu/version.txt", "stale")
+        archive.writestr("config/GTNewHorizons/dreamcraft.cfg", "S:ModPackVersion=stale\n")
+        archive.writestr("config/DreamCoreMod.properties", "displayedModpackVersion=stale\n")
+        archive.writestr("unused-binary.dat", b"x" * 1_000_000)
+    requests: list[Request] = []
+
+    def respond(request: Request) -> Response:
+        requests.append(request)
+        return Response(200, content=source.getvalue())
+
+    async def run() -> None:
+        async with AsyncClient(transport=MockTransport(respond)) as client:
+            context = AppContext(client)
+            release = context.release_service.get_release("daily")
+            assert release is not None
+            assembler = ZipAssembler(context, release)
+            for side in (Side.CLIENT_JAVA9, Side.SERVER_JAVA9):
+                for mod, version in assembler.get_mods(side):
+                    if mod.private:
+                        version.maven_url = (
+                            f"https://nexus.gtnewhorizons.com/repository/releases/com/github/GTNewHorizons/{mod.name}/{version.version_tag}/mod.jar"
+                        )
+            original_path = downloader.get_asset_version_cache_location(*assembler.get_config())
+            compact_path = await fullpack.prepare_fullpack_config(assembler)
+            assert len(requests) == 1
+            assert str(requests[0].url) == assembler.get_config()[1].browser_download_url
+            assert compact_path.stat().st_size < original_path.stat().st_size / 100
+            with ZipFile(compact_path) as archive:
+                assert set(archive.namelist()) == set(assembler.modified_config_files)
+            for side in (Side.CLIENT_JAVA9, Side.SERVER_JAVA9):
+                kwargs = {"side": side, "server_assets_url": "https://example.com/server-assets.zip"}
+                assert fullpack.build_fullpack_manifest(assembler, lambda *_: compact_path, **kwargs) == fullpack.build_fullpack_manifest(
+                    assembler, lambda *_: original_path, **kwargs
+                )
+
+            original_path.unlink()
+            assert await fullpack.prepare_fullpack_config(assembler) == compact_path
+            assert not original_path.exists()
+            assert len(requests) == 1
+            _, version = assembler.get_config()
+            version.browser_download_url = "https://example.com/new-config.zip"
+            assert fullpack.fullpack_config_cache_path(assembler) != compact_path
+
+    asyncio.run(run())
 
 
 def test_daily_manifest_writes_a_matching_fullpack_installation_plan(

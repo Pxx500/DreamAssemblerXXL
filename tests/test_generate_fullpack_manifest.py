@@ -6,17 +6,41 @@ from zipfile import ZipFile
 
 import httpx
 import pytest
+from asyncclick.testing import CliRunner
 
+from daxxl import fullpack_manifest
 from daxxl.app_context import AppContext
 from daxxl.assembler import downloader
 from daxxl.assembler.platforms import zip_assembler
 from daxxl.cli import generate_fullpack_manifest as generator
 
 
+def test_cache_info_resolves_the_generation_input_without_downloading_or_writing_manifests(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "test")
+    monkeypatch.setattr(fullpack_manifest, "CACHE_DIR", tmp_path / "cache")
+    monkeypatch.setattr(generator, "RELEASE_MANIFEST_DIR", tmp_path / "manifests")
+
+    async def run() -> None:
+        result = await CliRunner().invoke(generator.generate_fullpack_manifest, ["--config-cache-info"])
+        assert result.exit_code == 0, result.output
+        info = json.loads(result.output)
+        async with httpx.AsyncClient() as client:
+            context = AppContext(client)
+            release = context.release_service.get_release("daily")
+            assert release is not None
+            expected = fullpack_manifest.fullpack_config_cache_path(zip_assembler.ZipAssembler(context, release))
+        assert info == {"path": expected.as_posix(), "key": expected.stem}
+        assert not (tmp_path / "cache").exists()
+        assert not (tmp_path / "manifests").exists()
+
+    asyncio.run(run())
+
+
 def test_server_asset_url_changes_with_contents_but_not_file_timestamps(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("GITHUB_TOKEN", "test")
     monkeypatch.setenv("GITHUB_REPOSITORY", "example/DreamAssemblerXXL")
     monkeypatch.setattr(downloader, "CACHE_DIR", tmp_path / "cache")
+    monkeypatch.setattr(fullpack_manifest, "CACHE_DIR", tmp_path / "cache")
     monkeypatch.setattr(generator, "RELEASE_MANIFEST_DIR", tmp_path / "manifests")
     monkeypatch.setattr(zip_assembler, "SERVER_ASSETS_DIR", tmp_path / "server")
     server_file = tmp_path / "server/forge/java9args.txt"
