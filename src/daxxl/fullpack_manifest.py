@@ -122,6 +122,7 @@ def build_fullpack_manifest(
 
     return {
         "version": 1,
+        "dailyBuild": assembler.context.assets.latest_successful_daily,
         "files": files,
         "archives": archives,
         "textFiles": text_files,

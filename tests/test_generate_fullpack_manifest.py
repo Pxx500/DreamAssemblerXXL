@@ -13,6 +13,33 @@ from daxxl.app_context import AppContext
 from daxxl.assembler import downloader
 from daxxl.assembler.platforms import zip_assembler
 from daxxl.cli import generate_fullpack_manifest as generator
+from daxxl.models.mod_version_info import ModVersionInfo
+from daxxl.services.release_service import ReleaseService
+
+
+def test_missing_daily_mod_version_stops_generation_before_writing_manifests(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "test")
+    monkeypatch.setattr(generator, "RELEASE_MANIFEST_DIR", tmp_path)
+
+    async def prepare_config(_assembler) -> Path:
+        raise AssertionError("generation reached config preparation with an unresolved mod")
+
+    monkeypatch.setattr(generator, "prepare_fullpack_config", prepare_config)
+
+    async def run() -> None:
+        async with httpx.AsyncClient() as client:
+            release = AppContext(client).release_service.get_release("daily")
+            assert release is not None
+        release.github_mods = {"lwjgl3ify": ModVersionInfo(version="999.0.0")}
+        release.external_mods = {}
+        monkeypatch.setattr(ReleaseService, "get_release", lambda _service, _name: release)
+
+        result = await CliRunner().invoke(generator.generate_fullpack_manifest)
+        assert result.exit_code == 1, result.output
+        assert "lwjgl3ify:999.0.0" in result.output
+        assert not (tmp_path / "fullpack").exists()
+
+    asyncio.run(run())
 
 
 def test_cache_info_resolves_the_generation_input_without_downloading_or_writing_manifests(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -57,6 +84,9 @@ def test_server_asset_url_changes_with_contents_but_not_file_timestamps(tmp_path
             context = AppContext(client)
             release = context.release_service.get_release("daily")
             assert release is not None
+            release.github_mods = {"lwjgl3ify": release.github_mods["lwjgl3ify"]}
+            release.external_mods = {}
+            monkeypatch.setattr(ReleaseService, "get_release", lambda _service, _name: release)
             assembler = zip_assembler.ZipAssembler(context, release)
             config_path = downloader.get_asset_version_cache_location(*assembler.get_config())
             with ZipFile(config_path, "w") as archive:

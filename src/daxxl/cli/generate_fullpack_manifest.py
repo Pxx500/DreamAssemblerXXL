@@ -9,6 +9,7 @@ import httpx
 from daxxl.app_context import AppContext
 from daxxl.assembler.platforms.zip_assembler import ZipAssembler
 from daxxl.defs import RELEASE_MANIFEST_DIR, DevRelease, ServerBrand, Side
+from daxxl.exceptions import NoModAssetFound
 from daxxl.fullpack_manifest import fullpack_config_cache_path, fullpack_manifest_path, prepare_fullpack_config, write_fullpack_manifest
 from daxxl.fullpack_release import RELEASE_TAG
 from daxxl.services.nexus import resolve_maven_url
@@ -29,6 +30,21 @@ async def generate_fullpack_manifest(config_cache_info: bool = False) -> None:
             path = fullpack_config_cache_path(assembler)
             click.echo(json.dumps({"path": path.as_posix(), "key": path.stem}))
             return
+
+        fullpack_sides = Side.CLIENT_JAVA9.valid_mod_sides() | Side.SERVER_JAVA9.valid_mod_sides()
+        missing = []
+        for name, selected in (release.github_mods | release.external_mods).items():
+            if selected.side is not None and selected.side not in fullpack_sides:
+                continue
+            try:
+                mod = context.assets.get_mod(name)
+            except NoModAssetFound:
+                missing.append(f"{name}:{selected.version}")
+                continue
+            if (selected.side or mod.side) in fullpack_sides and not mod.has_version(selected.version):
+                missing.append(f"{name}:{selected.version}")
+        if missing:
+            raise click.ClickException(f"Missing daily mod versions: {', '.join(missing)}")
 
         resolved_private_mods: set[tuple[str, str]] = set()
         for side in (Side.CLIENT_JAVA9, Side.SERVER_JAVA9):

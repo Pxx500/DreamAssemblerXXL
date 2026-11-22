@@ -103,7 +103,7 @@ def test_daily_manifest_writes_a_matching_fullpack_installation_plan(
     plan = json.loads((manifest_path.parent / "fullpack" / manifest_path.name).read_text(encoding="utf-8"))
     asyncio.run(client.aclose())
 
-    assert set(plan) == {"version", "files", "archives", "textFiles"}
+    assert set(plan) == {"version", "dailyBuild", "files", "archives", "textFiles"}
     assert plan["version"] == 1
 
     files = plan["files"]

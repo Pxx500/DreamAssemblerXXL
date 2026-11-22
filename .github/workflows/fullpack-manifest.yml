@@ -18,17 +18,56 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Select published daily
+        id: daily
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=$(gh api repos/GTNewHorizons/GTNH-Daily-Builds/releases/latest --jq .tag_name)
+          [[ "$tag" =~ ^daily-[0-9]{4}-[0-9]{2}-[0-9]{2}\+([0-9]+)$ ]]
+          build=${BASH_REMATCH[1]}
+
+          assets=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            --jq '.[] | select(.tag_name == "fullpack-daily") | .assets[].name')
+          if grep -Fxq daily.json <<< "$assets" && grep -Fxq daily-server.json <<< "$assets"; then
+            manifests="$RUNNER_TEMP/published-fullpack"
+            gh release download fullpack-daily --repo "$GITHUB_REPOSITORY" --dir "$manifests" \
+              --pattern daily.json --pattern daily-server.json
+            if jq -es --argjson build "$build" 'all(.[]; .dailyBuild == $build)' "$manifests"/daily*.json > /dev/null; then
+              echo "Daily $build is already published for both runtimes"
+              exit 0
+            fi
+          fi
+
+          # Use the input files committed together by the official daily build.
+          commit=$(git log -1 --format=%H --author='github-actions\[bot\]' \
+            --grep="^Upload daily changelog from daily [0-9]* to $build$" \
+            -- releases/manifests/daily.json)
+          if [[ -z "$commit" ]]; then
+            echo "Daily $build data has not reached this checkout yet" >&2
+            exit 1
+          fi
+          git restore --source="$commit" -- gtnh-assets.json releases/manifests/daily.json
+          jq -e --argjson build "$build" '.latest_successful_daily == $build' gtnh-assets.json > /dev/null
+          echo "build=$build" >> "$GITHUB_OUTPUT"
 
       - name: Install uv
+        if: steps.daily.outputs.build != ''
         uses: astral-sh/setup-uv@v8.1.0
         with:
           python-version: 3.11
           enable-cache: true
 
       - name: Install dependencies
+        if: steps.daily.outputs.build != ''
         run: uv sync --locked --all-extras --dev
 
       - name: Resolve required config cache
+        if: steps.daily.outputs.build != ''
         id: config-cache
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -38,6 +77,7 @@ jobs:
           echo "key=$(jq -r '.key' <<< "$info")" >> "$GITHUB_OUTPUT"
 
       - name: Load cached config
+        if: steps.daily.outputs.build != ''
         id: load-config-cache
         uses: actions/cache/restore@v5
         with:
@@ -45,18 +85,20 @@ jobs:
           key: fullpack-config-sources-v1-${{ runner.os }}-${{ steps.config-cache.outputs.key }}
 
       - name: Generate manifest
+        if: steps.daily.outputs.build != ''
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: uv run python -m daxxl.cli.generate_fullpack_manifest
 
       - name: Save cached config
-        if: steps.load-config-cache.outputs.cache-hit != 'true'
+        if: steps.daily.outputs.build != '' && steps.load-config-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v5
         with:
           path: ${{ steps.config-cache.outputs.path }}
           key: fullpack-config-sources-v1-${{ runner.os }}-${{ steps.config-cache.outputs.key }}
 
       - name: Publish manifests
+        if: steps.daily.outputs.build != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
